@@ -1935,6 +1935,7 @@ class Client:
             if entry_id.startswith('profile-conversation'):
                 tweets = item['content']['items']
                 replies = []
+                conversation_ids = item['content']['metadata']['conversationMetadata']['allTweetIds']
                 for reply in tweets[1:]:
                     tweet_object = tweet_from_data(self, reply)
                     if tweet_object is None:
@@ -1943,11 +1944,13 @@ class Client:
                 item = tweets[0]
             else:
                 replies = None
+                conversation_ids = None
 
             tweet = tweet_from_data(self, item)
             if tweet is None:
                 continue
             tweet.replies = replies
+            tweet.conversation_ids = conversation_ids
             results.append(tweet)
 
         return Result(
