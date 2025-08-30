@@ -1944,6 +1944,7 @@ class Client:
                 item = tweets[0]
             else:
                 replies = None
+                conversation_ids = None
 
             tweet = tweet_from_data(self, item)
             if tweet is None:
