@@ -104,6 +104,7 @@ class Tweet:
         self.user = user
 
         self.replies: Result[Tweet] | None = None
+        self.conversation_ids: list[str] | None = None
         self.reply_to: list[Tweet] | None = None
         self.related_tweets: list[Tweet] | None = None
         self.thread: list[Tweet] | None = None
@@ -131,6 +132,10 @@ class Tweet:
     @property
     def is_quote_status(self) -> bool:
         return self._legacy['is_quote_status']
+
+    @property
+    def conversation_ids(self) -> list[str] | None:
+        return self._data['conversation_ids']
 
     @property
     def possibly_sensitive(self) -> bool:
