@@ -2008,6 +2008,15 @@ class Client:
         results = []
 
         for item in items:
+            if 'home-conversation' in item['entryId']:
+              tweets = item['content']['items']
+              tweet = tweet_from_data(self, tweets[0])
+              for other_tweet in tweets[1:]:
+                tweet.replies.append(tweet_from_data(self, other_tweet))
+              tweet.conversation_ids = item['content']['metadata']['conversationMetadata']['allTweetIds']
+              results.append(tweet)
+              continue
+
             if 'itemContent' not in item['content']:
                 continue
             tweet = tweet_from_data(self, item)
@@ -2068,6 +2077,15 @@ class Client:
         results = []
 
         for item in items:
+            if 'home-conversation' in item['entryId']:
+                tweets = item['content']['items']
+                tweet = tweet_from_data(self, tweets[0])
+                for other_tweet in tweets[1:]:
+                  tweet.replies.append(tweet_from_data(self, other_tweet))
+                tweet.conversation_ids = item['content']['metadata']['conversationMetadata']['allTweetIds']
+                results.append(tweet)
+                continue
+              
             if 'itemContent' not in item['content']:
                 continue
             tweet = tweet_from_data(self, item)
