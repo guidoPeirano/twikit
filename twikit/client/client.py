@@ -1840,6 +1840,40 @@ class Client:
             raise TwitterException(f'Invalid note id: {note_id}')
         return CommunityNote(self, note_data)
 
+    async def get_user_articles_ids(
+      self, 
+      user_id: str, 
+      count: int = 40, 
+      cursor: str | None = None
+    ) -> Result[str]:
+      """
+      Retrieves articles from a user's timeline.
+
+      Parameters
+      ----------
+      user_id : :class:`str`
+        The ID of the user whose articles to retrieve.
+      count : :class:`int`, default=40
+        The number of articles to retrieve.
+      cursor : :class:`str`, default=None
+        The cursor to retrieve more articles.
+      """
+      articles = await self.gql.user_articles(user_id, count, cursor)
+      instructions_ = find_dict(articles, 'instructions', True)
+      if not instructions_:
+        return Result([])
+
+      instructions = instructions_[0]
+      items = instructions[-1]['entries']
+      next_cursor = items[-1]['content']['value']
+      previous_cursor = items[-2]['content']['value']
+
+      for item in items:
+        if item['entryId'].startswith('tweet'):
+          articles.append(item['content']['value'])
+
+      return Result(articles, partial(self.get_user_articles_ids, user_id, count, next_cursor), next_cursor, partial(self.get_user_articles_ids, user_id, count, previous_cursor), previous_cursor)
+
     async def get_user_tweets(
         self,
         user_id: str,

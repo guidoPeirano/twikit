@@ -51,6 +51,7 @@ class Endpoint:
     USER_MEDIA = url('2tLOJWwGuCTytDrGBg8VwQ/UserMedia')
     USER_LIKES = url('IohM3gxQHfvWePH5E3KuNA/Likes')
     USER_HIGHLIGHTS_TWEETS = url('tHFm_XZc_NNi-CfUThwbNw/UserHighlightsTweets')
+    USER_ARTICLES = url('Fv7ymhWjAfsWQ4oW9TzZKg/UserArticlesTweets')
     HOME_TIMELINE = url('-X_hcgQzmHGl29-UXxz4sw/HomeTimeline')
     HOME_LATEST_TIMELINE = url('U0cdisy7QFIoTfu3-Okw0A/HomeLatestTimeline')
     FAVORITE_TWEET = url('lI07N6Otwv1PhnEgXILM7A/FavoriteTweet')
@@ -98,7 +99,8 @@ class Endpoint:
     MEMBERS_SLICE_TIMELINE_QUERY = url('KDAssJ5lafCy-asH4wm1dw/membersSliceTimeline_Query')
     MODERATORS_SLICE_TIMELINE_QUERY = url('9KI_r8e-tgp3--N5SZYVjg/moderatorsSliceTimeline_Query')
     COMMUNITY_TWEET_SEARCH_MODULE_QUERY = url('5341rmzzvdjqfmPKfoHUBw/CommunityTweetSearchModuleQuery')
-    TWEET_RESULTS_BY_REST_IDS = url('PTN9HhBAlpoCTHfspDgqLA/TweetResultsByRestIds')
+    TWEET_RESULTS_BY_REST_IDS = url('PTN9HhBAlpoCTHfspDgqLA/
+    TweetResultsByRestIds')
 
 
 class GQLClient:
@@ -317,6 +319,9 @@ class GQLClient:
         if cursor is not None:
             variables['cursor'] = cursor
         return await self.gql_get(endpoint, variables, FEATURES)
+
+    async def user_articles(self, user_id, count, cursor):
+        return await self._get_user_tweets(user_id, count, cursor, Endpoint.USER_ARTICLES)
 
     async def user_tweets(self, user_id, count, cursor):
         return await self._get_user_tweets(user_id, count, cursor, Endpoint.USER_TWEETS)

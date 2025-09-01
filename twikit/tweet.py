@@ -134,10 +134,6 @@ class Tweet:
         return self._legacy['is_quote_status']
 
     @property
-    def conversation_ids(self) -> list[str] | None:
-        return self._data['conversation_ids']
-
-    @property
     def possibly_sensitive(self) -> bool:
         return self._legacy.get('possibly_sensitive')
 
