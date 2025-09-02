@@ -333,6 +333,7 @@ class Client:
         self.http.cookies.clear()
 
         if cookies_file and os.path.exists(cookies_file):
+            print('Loading cookies from file')
             self.load_cookies(cookies_file)
             return
 
