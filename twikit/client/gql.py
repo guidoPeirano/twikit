@@ -15,7 +15,8 @@ from ..constants import (
     TWEET_RESULT_BY_REST_ID_FEATURES,
     TWEET_RESULTS_BY_REST_IDS_FEATURES,
     USER_FEATURES,
-    USER_HIGHLIGHTS_TWEETS_FEATURES
+    USER_HIGHLIGHTS_TWEETS_FEATURES,
+    USER_ARTICLES_FEATURES
 )
 from ..utils import flatten_params, get_query_id
 
@@ -319,8 +320,19 @@ class GQLClient:
             variables['cursor'] = cursor
         return await self.gql_get(endpoint, variables, FEATURES)
 
+    async def _get_user_articles(self, user_id, count, cursor):
+        variables = {
+            'userId': user_id,
+            'count': count,
+            'includePromotedContent': True,
+            'withVoice': True
+        }
+        if cursor is not None:
+            variables['cursor'] = cursor
+        return await self.gql_get(Endpoint.USER_ARTICLES, variables, USER_ARTICLES_FEATURES)
+
     async def user_articles(self, user_id, count, cursor):
-        return await self._get_user_tweets(user_id, count, cursor, Endpoint.USER_ARTICLES)
+        return await self._get_user_articles(user_id, count, cursor)
 
     async def user_tweets(self, user_id, count, cursor):
         return await self._get_user_tweets(user_id, count, cursor, Endpoint.USER_TWEETS)

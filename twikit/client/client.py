@@ -1858,8 +1858,8 @@ class Client:
       cursor : :class:`str`, default=None
         The cursor to retrieve more articles.
       """
-      articles = await self.gql.user_articles(user_id, count, cursor)
-      instructions_ = find_dict(articles, 'instructions', True)
+      response, _ = await self.gql.user_articles(user_id, count, cursor)
+      instructions_ = find_dict(response, 'instructions', True)
       if not instructions_:
         return Result([])
 
@@ -1868,9 +1868,10 @@ class Client:
       next_cursor = items[-1]['content']['value']
       previous_cursor = items[-2]['content']['value']
 
+      articles = []
       for item in items:
         if item['entryId'].startswith('tweet'):
-          articles.append(item['content']['value'])
+          articles.append(item['entryId'].split('-')[1])
 
       return Result(articles, partial(self.get_user_articles_ids, user_id, count, next_cursor), next_cursor, partial(self.get_user_articles_ids, user_id, count, previous_cursor), previous_cursor)
 
